@@ -1,0 +1,34 @@
+
+#include <ros.h>
+#include <std_msgs/Float32.h>
+#include <DHT11.h>
+
+
+int pin=4;
+DHT11 dht11(pin);
+ros::NodeHandle nh;
+std_msgs::Float32 temp_msg;
+ros::Publisher pub_temp("Temperature", &temp_msg);
+
+
+
+
+void setup() {
+  nh.getHardware()->setBaud(9600);
+  nh.initNode();
+  nh.advertise(pub_temp);
+  
+ 
+ 
+  
+
+}
+void loop() {
+    float temp, humi;
+    dht11.read(humi,temp);
+    temp_msg.data=temp;
+    pub_temp.publish(&temp_msg);
+    nh.spinOnce();
+    delay(1000);
+
+}
